@@ -18,14 +18,6 @@ const randomNumber = () => Math.round(Math.random() * 10);
 const permissions = {
   isAdmin: ({ session }: any) => !!session?.data?.isAdmin,
 };
-const rules = {
-  listAccess: {
-    create: permissions.isAdmin,
-    read: permissions.isAdmin,
-    update: permissions.isAdmin,
-    delete: permissions.isAdmin,
-  },
-};
 
 const layouts = [
   [1, 1],
@@ -36,7 +28,11 @@ const layouts = [
 ] as const;
 
 const User = list({
-  access: rules.listAccess,
+  access: {
+    create: permissions.isAdmin,
+    update: permissions.isAdmin,
+    delete: permissions.isAdmin,
+  },
   ui: {
     listView: {
       initialColumns: ['name', 'isAdmin', 'posts'],
@@ -44,9 +40,9 @@ const User = list({
   },
   fields: {
     name: text({ isRequired: true }),
-    email: text({ isRequired: true, isUnique: true }),
-    password: password(),
-    isAdmin: checkbox({ defaultValue: false }),
+    email: text({ isRequired: true, isUnique: true, access: { read: permissions.isAdmin } }),
+    password: password({ access: { read: permissions.isAdmin } }),
+    isAdmin: checkbox({ defaultValue: false, access: { read: permissions.isAdmin } }),
     posts: relationship({ ref: 'Post.author', many: true }),
     randomNumber: virtual({
       graphQLReturnType: 'Float',
@@ -58,7 +54,11 @@ const User = list({
 });
 
 export const Post = list({
-  access: rules.listAccess,
+  access: {
+    create: permissions.isAdmin,
+    update: permissions.isAdmin,
+    delete: permissions.isAdmin,
+  },
   ui: {
     listView: {
       initialColumns: ['title', 'slug', 'status'],
@@ -78,7 +78,6 @@ export const Post = list({
         displayMode: 'segmented-control',
       },
     }),
-    publishedAt: timestamp(),
     content: document({
       ui: { views: require.resolve('./fields/Content.tsx') },
       formatting: true,
@@ -87,6 +86,7 @@ export const Post = list({
       dividers: true,
       componentBlocks,
     }),
+    publishedAt: timestamp(),
     author: relationship({
       ref: 'User.posts',
       ui: {
