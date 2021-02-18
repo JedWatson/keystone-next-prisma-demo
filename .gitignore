@@ -78,6 +78,9 @@ typings/
 # Next.js build output
 .next
 
+# Keystone build output
+.keystone
+
 # Nuxt.js build / generate output
 .nuxt
 dist
