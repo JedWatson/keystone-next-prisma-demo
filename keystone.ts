@@ -24,10 +24,8 @@ const isAccessAllowed = ({ session }: { session?: any }) => !!session?.data?.isA
 export default auth.withAuth(
   config({
     db: {
-      // adapter: 'prisma_postgresql',
-      // url: 'postgres://keystone:password@localhost:5432/keystone-next-prisma-demo',
-      adapter: 'mongoose',
-      url: 'mongodb://localhost/keystone-next-prisma-demo',
+      adapter: 'prisma_postgresql',
+      url: 'postgres://keystone:password@localhost:5432/keystone-next-prisma-demo',
     },
     ui: {
       isAccessAllowed,
