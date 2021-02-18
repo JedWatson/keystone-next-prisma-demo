@@ -27,6 +27,32 @@ const NotEditable = ({ children, ...props }: HTMLAttributes<HTMLDivElement>) => 
   </span>
 );
 
+const getToneConfig = (tone: string, palette: any) => {
+  const tones = {
+    info: {
+      background: palette.blue100,
+      foreground: palette.blue700,
+      icon: noticeIconMap.info,
+    },
+    error: {
+      background: palette.red100,
+      foreground: palette.red700,
+      icon: noticeIconMap.error,
+    },
+    warning: {
+      background: palette.yellow100,
+      foreground: palette.yellow700,
+      icon: noticeIconMap.warning,
+    },
+    success: {
+      background: palette.green100,
+      foreground: palette.green700,
+      icon: noticeIconMap.success,
+    },
+  };
+  return tones[tone];
+};
+
 export const componentBlocks = {
   quote: component({
     component: ({ attribution, content }) => {
@@ -60,29 +86,8 @@ export const componentBlocks = {
   notice: component({
     component: function Notice({ content, tone }) {
       const { palette, radii, spacing } = useTheme();
-      const tones = {
-        info: {
-          background: palette.blue100,
-          foreground: palette.blue700,
-          icon: noticeIconMap.info,
-        },
-        error: {
-          background: palette.red100,
-          foreground: palette.red700,
-          icon: noticeIconMap.error,
-        },
-        warning: {
-          background: palette.yellow100,
-          foreground: palette.yellow700,
-          icon: noticeIconMap.warning,
-        },
-        success: {
-          background: palette.green100,
-          foreground: palette.green700,
-          icon: noticeIconMap.success,
-        },
-      };
-      const toneConfig = tones[tone.value];
+
+      const toneConfig = getToneConfig(tone.value, palette);
 
       return (
         <div
@@ -174,16 +179,65 @@ export const componentBlocks = {
     label: 'Product',
     component: props => {
       return (
-        <div>
-          <div>{props.name}</div>
-          <div>{props.title}</div>
-          <div>{props.content}</div>
-          {props.cta.discriminant ? (
-            <div>
-              <div>{props.cta.value.label}</div>
-              <div>{props.cta.value.command}</div>
-            </div>
+        <div css={{ display: 'flex' }}>
+          {props.imageSrc.value ? (
+            <div
+              contentEditable={false}
+              css={{
+                flex: 1,
+                userSelect: 'none',
+                width: 200,
+                height: 200,
+                marginRight: '2em',
+                backgroundColor: 'white',
+                backgroundImage: `url(${props.imageSrc.value})`,
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+              }}
+            />
           ) : null}
+          <div css={{ flex: 2 }}>
+            <div
+              css={{ color: 'rgb(102, 126, 234)', textTransform: 'uppercase', fontWeight: 'bold' }}
+            >
+              {props.name}
+            </div>
+            <div css={{ margin: '0.2em 0', fontSize: '1.5em' }}>{props.title}</div>
+            <div css={{ margin: '1em 0', fontSize: '1.1em' }}>{props.content}</div>
+            {props.cta.discriminant ? (
+              <div css={{ margin: '0.3em 0' }}>
+                <div
+                  css={{
+                    backgroundColor: 'rgb(102, 126, 234)',
+                    color: 'white',
+                    padding: '0.5em 1.0em',
+                    fontSize: '1em',
+                    borderRadius: 5,
+                    display: 'inline-block',
+                    marginRight: '0.5em',
+                  }}
+                >
+                  {props.cta.value.label}
+                </div>
+                <div
+                  css={{
+                    backgroundColor: 'rgb(60, 54, 107)',
+                    color: 'white',
+                    padding: '0.5em 1.0em',
+                    fontSize: '1em',
+                    borderRadius: 5,
+                    display: 'inline-block',
+                    fontFamily:
+                      '"Jetbrains Mono", Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+                  }}
+                >
+                  <NotEditable>$ </NotEditable>
+                  {props.cta.value.command}
+                </div>
+              </div>
+            ) : null}
+          </div>
         </div>
       );
     },
