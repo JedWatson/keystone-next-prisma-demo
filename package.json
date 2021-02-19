@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "prototype": "keystone-next prototype",
     "dev": "keystone-next dev",
     "start": "keystone-next start",
     "build": "keystone-next build"
